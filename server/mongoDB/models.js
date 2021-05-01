@@ -13,8 +13,10 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   avatar: String,
-  booksOwned: [{ bookId: String, availableForRent: Boolean }],
-  booksRented: [{ bookId: String }],
+  booksOwned: [
+    { bookId: { type: String, unique: true }, availableForRent: String },
+  ],
+  booksRented: [{ bookId: String, ownerId: String }],
 });
 
 const userModel = mongoose.model("userModel", userSchema);
@@ -25,16 +27,19 @@ const bookSchema = new mongoose.Schema({
   category: { type: String, required: true },
   image: String,
   description: String,
-  ratings: [
-    {
-      userId: String,
-      rating: {
-        type: Number,
-        min: [1, "Rating scale is 1 to 5"],
-        max: [5, "Rating scale is 1 to 5"],
+  ratings: {
+    averageRating: Number,
+    userRatings: [
+      {
+        userId: String,
+        rating: {
+          type: Number,
+          min: [1, "Rating scale is 1 to 5"],
+          max: [5, "Rating scale is 1 to 5"],
+        },
       },
-    },
-  ],
+    ],
+  },
   comments: [
     {
       userId: String,
@@ -45,4 +50,13 @@ const bookSchema = new mongoose.Schema({
 
 const bookModel = mongoose.model("bookModel", bookSchema);
 
-module.exports = { userModel, bookModel };
+const authorSchema = new mongoose.Schema({
+  name: { type: String, required: true, index: true, unique: true },
+  biography: String,
+  avatar: String,
+  externalLink: String,
+});
+
+const authorModel = mongoose.model("authorModel", authorSchema);
+
+module.exports = { userModel, bookModel, authorModel };
