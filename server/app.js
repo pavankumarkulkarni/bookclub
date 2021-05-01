@@ -5,7 +5,7 @@ const typeDefs = require("./graphQL/typeDefs");
 const resolvers = require("./graphQL/resolvers");
 require("dotenv").config();
 const mongoose = require("mongoose");
-const { userModel, bookModel } = require("./mongoDB/models");
+const { userModel, bookModel, authorModel } = require("./mongoDB/models");
 const jwt = require("jsonwebtoken");
 
 function getLoggedInUser(req) {
@@ -26,6 +26,7 @@ const server = new ApolloServer({
   context: ({ req }) => ({
     userModel,
     bookModel,
+    authorModel,
     JWT_SECRET: process.env.JWT_SECRET,
     me: getLoggedInUser(req),
   }),

@@ -1,10 +1,11 @@
 const bookTypeDefs = `
 type Book {
   title:String!
-  authorId:String!
+  author:Author
   category:String!
   image:String
   description:String
+  avgRating:Float
   ratings:[rating]
   comments:[comment]
 }
@@ -20,11 +21,16 @@ type comment{
 }
 
 extend type Query{
-  books:String
+  books:[Book],
+  book(bookId:String):Book,
+  booksByAuthor(authorId:String!):[Book],
+  booksByUser(userId:String!):[Book]
 }
 
 extend type Mutation{
-  createBook(title:String!,author:String!,category:String!):Boolean
+  createBook(title:String!,author:String!,category:String!):Boolean,
+  addComment(bookId:String!,comment:String!):Boolean,
+  rateBook(bookId:String!, rating:Int):Boolean
 }
 `;
 
